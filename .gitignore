@@ -1,3 +1,4 @@
 models/
 models/db.js
 node_modules/
+.env

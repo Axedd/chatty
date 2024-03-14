@@ -5,6 +5,7 @@ const server = http.createServer(app);
 const { Server } = require('socket.io');
 const io = new Server(server);
 const session = require('express-session');
+require('dotenv').config();
 
 // Use body-parser middleware to parse request bodies before your route handlers.
 app.use(express.json());
@@ -14,11 +15,11 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 
 app.use(session({
-    secret: 'iujfgd8dbiufb32uhi@@£$$€{~!!!!!8432964',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: 'auto'}
-}))
+    cookie: { secure: 'auto' }
+}));
 
 // Now declare your route handlers.
 const mainRouter = require('./routes/main');
