@@ -10,16 +10,17 @@
 <body>
     <%- include('static/header') %>
 
-    
-    <form action="/login" method="POST">
+    <form action="/register" method="POST">
         <div class="container">
             <label>Username : </label> 
-            <input type="text" placeholder="Enter Username" name="username" required>  
+            <input type="text" placeholder="Enter Username" name="username" required> 
+            <label>Email : </label> 
+            <input type="text" placeholder="Enter Email" name="email" required>   
             <label>Password : </label>   
             <input type="password" placeholder="Enter Password" name="password" required>  
-            <button type="submit">Login</button>
+            <button type="submit">Register</button>
         </div>
-        <a href="/register">Register
+        <a href="/login">Login
     </form>
 </body>
 <script src="/socket.io/socket.io.js"></script>

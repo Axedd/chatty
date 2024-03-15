@@ -21,14 +21,27 @@ app.use(session({
     cookie: { secure: 'auto' }
 }));
 
+app.use((req, res, next) => {
+    res.locals.user = req.session.user || null;
+    next();
+});
+
 // Now declare your route handlers.
 const mainRouter = require('./routes/main');
 const profileRouter = require('./routes/profile');
 const loginRouter = require('./routes/login');
+const registerRouter = require('./routes/register');
 
 app.use('/', mainRouter);
 app.use('/profile', profileRouter);
 app.use('/login', loginRouter);
+app.use('/register', registerRouter);
+
+app.get('/logout', (req, res) => {
+    req.session.destroy(() => {
+        res.redirect('/');
+    });
+});
 
 
 
@@ -41,18 +54,15 @@ io.on('connection', (socket) => {
     
     
     socket.on('chat message', (msg) => {
-        if (socket.username) {
-            io.emit('chat message', socket.username + ": " + msg);
+        if (user) {
+            io.emit('chat message', user.username + ": " + msg);
         } else {
             // Emitting an event specifically to this socket ID
-            io.to(someSocketId).emit('showAlertUsername', 'Please Enter A Username!');
+            io.to(someSocketId).emit('showAlertUsername', 'Please Login!');
         }
     });
 
     socket.on('add username', (username) => {
-        console.log(username)
-        socket.username = username;
-        console.log(someSocketId)
         io.to(someSocketId).emit('change username', username);
     })
     
