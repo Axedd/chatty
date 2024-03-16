@@ -7,7 +7,7 @@ const io = new Server(server);
 const session = require('express-session');
 require('dotenv').config();
 
-// Use body-parser middleware to parse request bodies before your route handlers.
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -26,7 +26,7 @@ app.use((req, res, next) => {
     next();
 });
 
-// Now declare your route handlers.
+// Declare the route handlers.
 const mainRouter = require('./routes/main');
 const profileRouter = require('./routes/profile');
 const loginRouter = require('./routes/login');
@@ -43,29 +43,24 @@ app.get('/logout', (req, res) => {
     });
 });
 
-
-
 io.on('connection', (socket) => {
     console.log('a user connected');
     const someSocketId = socket.id; // For demonstration, using the current socket's ID
+
+    socket.on('add username', (username) => {
+        console.log(username)
+        socket.username = username; // Store the username in the socket object for later use
+    });
 
     // Emitting an event specifically to this socket ID
     io.to(someSocketId).emit('showAlert', 'This is a message for you!');
     
     
     socket.on('chat message', (msg) => {
-        if (user) {
-            io.emit('chat message', user.username + ": " + msg);
-        } else {
-            // Emitting an event specifically to this socket ID
-            io.to(someSocketId).emit('showAlertUsername', 'Please Login!');
-        }
+        const message = socket.username + ': ' + msg;
+        io.emit('chat message', message);
     });
 
-    socket.on('add username', (username) => {
-        io.to(someSocketId).emit('change username', username);
-    })
-    
     
     socket.on('disconnect', () => {
         io.emit('chat message', '*User Left The Chat*');
