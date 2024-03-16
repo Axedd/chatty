@@ -5,10 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%- title %></title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/post.css">
 </head>
 
 <body>
     <%- include('static/header') %>
+
+    <section id="new-post-section">
+        <% if (user) { %>
+            <form id="new-post-form" action="/post" method="POST">
+                <textarea name="content" placeholder="What's happening?" required></textarea>
+                <input type="text" name="image_url" placeholder="Image URL (optional)">
+                <button type="submit">Post</button>
+            </form>
+        <% } else { %>
+            <h1 style="text-align: center;">Login/Register To Start Posting!</h1>
+        <% } %>
+    </section>
+
+    <section id="posts-section">
+        <% if(posts.length > 0){ %>
+          <% posts.forEach(function(post) { %>
+            <article class="post">
+              <div class="post-content"><%= post.content %></div>
+              <% if(post.image_url){ %>
+                <div class="post-image">
+                  <img src="<%= post.image_url %>" alt="Post Image">
+                </div>
+              <% } %>
+              <div class="post-footer">
+                <!-- You can add other post details like author, date, etc. here -->
+                <span>Posted on <%= post.created_at.toISOString().slice(0, 10) %></span>
+              </div>
+            </article>
+          <% }); %>
+        <% } else { %>
+          <p>No posts to show.</p>
+        <% } %>
+      </section>
+        
+    </section>
 
     <ul id="messages"></ul>
 

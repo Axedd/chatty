@@ -15,13 +15,13 @@ router.post('/', async function(req, res) {
 
   try {
       const [[user]] = await db.execute(query, [username]);
-      console.log(user);
+
       if (user) {
 
         const match = await bcrypt.compare(password, user.password_hash);
         if (match) {
 
-          req.session.user = { id: user.user_id, username: username };
+          req.session.user = { userID: user.user_id, username: username };
           return res.redirect('/');
         } else {
           return res.status(401).send('Username or password is incorrect');
