@@ -50,6 +50,7 @@
   }
   
   .post-content {
+    margin-top: 5px;
     margin-bottom: 10px;
   }
   
@@ -75,4 +76,33 @@
       margin-left: auto;
       margin-right: auto;
     }
+  }
+
+
+  .comment {
+    background-color: #f8f9fa; /* Slightly lighter than post background for distinction */
+    border-left: 4px solid #007bff; /* Blue accent to tie in with your button colors */
+    padding: 10px 15px;
+    margin-top: 15px;
+    border-radius: 5px; /* Consistent with your border-radius usage */
+  }
+  
+  .comment a {
+    color: #007bff; /* Link color consistent with your design */
+    text-decoration: none; /* Optional: removes underline from links */
+    font-weight: bold; /* Makes the author name stand out */
+  }
+  
+  .comment-content {
+    margin-top: 10px; /* Spacing for readability */
+  }
+  
+  .comment-footer {
+    margin-top: 10px;
+    color: #666; /* Consistent with your post-footer color */
+    font-size: 0.8em; /* Smaller text for meta information */
+  }
+  
+  .comment:hover {
+    background-color: #e2e6ea; /* Lighter shade for hover effect */
   }

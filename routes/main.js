@@ -1,15 +1,28 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../models/db');
+const postModel = require('../models/postModel')
 
 
 router.get('/', async function(req, res, next) {
-  const query = 'SELECT * FROM posts ORDER BY created_at DESC';
+
+  const [results, fields] = await postModel.getPostAuthor()
+  authorList = {}
+
+  // Identify usernames from user_ids
+  for (i = 0; i < results.length; i++) {
+    authorList[results[i].user_id] = results[i].username
+  }
   
   try {
-    const [results, fields] = await db.execute(query);
+    const [postResults, fields] = await postModel.getAllPosts()
+    const [commentResults, commentFields] = await postModel.getAllComments()
     
-    res.render('index', { title: 'Home', posts: results, userID: req.session.userID});
+    if (req.session.user) {
+      res.render('index', { title: 'Home', posts: postResults, authorList: authorList, comments: commentResults});
+    } else {
+      res.render('index', { title: 'Home', posts: postResults, authorList: authorList, comments: commentResults});
+    }
   } catch (error) {
     console.error('Failed to fetch posts: ', error);
     res.status(500).send('An error occurred while fetching posts.');
@@ -18,8 +31,7 @@ router.get('/', async function(req, res, next) {
 
 // Route to handle form submission and create a new post
 router.post('/post', async (req, res) => {
-  // Assuming you have user session management to get the user's id
-  const userId = req.session.userId; // Replace with your session management logic
+  const user_id = req.session.user.userID
   const { content, image_url } = req.body;
 
   if (!content) {
@@ -27,11 +39,26 @@ router.post('/post', async (req, res) => {
     return;
   }
 
-  // Insert post into database
-  const query = `INSERT INTO posts (user_id, content, image_url) VALUES (?, ?, ?)`;
-  
   try {
-    await db.execute(query, [7, content, image_url || null]);
+    await postModel.createPost([user_id, content, image_url || null])
+    res.redirect('/'); 
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while creating the post.");
+  }
+});
+
+router.post('/comment', async (req, res) => {
+  const user_id = req.session.user.userID
+  const { content, post_id } = req.body;
+
+  if (!content) {
+    res.status(400).send("Post content cannot be empty.");
+    return;
+  }
+
+  try {
+    await postModel.createComment([user_id, post_id, content])
     res.redirect('/'); 
   } catch (error) {
     console.error(error);

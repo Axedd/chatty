@@ -27,6 +27,7 @@
         <% if(posts.length > 0){ %>
           <% posts.forEach(function(post) { %>
             <article class="post">
+              <a>@<%= authorList[post.user_id] %></a>
               <div class="post-content"><%= post.content %></div>
               <% if(post.image_url){ %>
                 <div class="post-image">
@@ -34,8 +35,34 @@
                 </div>
               <% } %>
               <div class="post-footer">
-                <!-- You can add other post details like author, date, etc. here -->
                 <span>Posted on <%= post.created_at.toISOString().slice(0, 10) %></span>
+              </div>
+              -------------------------------------------------------
+              <% if (user) { %>
+                <form id="new-comment-form" action="/comment" method="POST">
+                  <input type="hidden" name="post_id" value="<%= post.id %>">
+                  <textarea name="content" placeholder="Commnet" required></textarea>
+                  <button type="submit">Post</button>
+                </form>
+              <% } else { %>
+
+              <% } %>
+              <div class="post-comments">
+                <% if(comments && comments.length > 0){ %>
+                  <% comments.forEach(function(comment) { %>
+                    <% if (comment.post_id === post.id) { %>
+                      <div class="comment">
+                        <a>@<%= authorList[comment.user_id] %></a>
+                        <div class="comment-content"><%= comment.content %></div>
+                        <div class="comment-footer">
+                          <span>Commented on <%= comment.created_at.toISOString().slice(0, 10) %></span>
+                        </div>
+                      </div>
+                      <% } %>
+                  <% }); %>
+                <% } else { %>
+                  <p>No comments to show.</p>
+                <% } %>
               </div>
             </article>
           <% }); %>

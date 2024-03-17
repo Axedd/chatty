@@ -22,6 +22,7 @@ router.post('/', async function(req, res) {
         if (match) {
 
           req.session.user = { userID: user.user_id, username: username };
+          console.log(req.session.user)
           return res.redirect('/');
         } else {
           return res.status(401).send('Username or password is incorrect');
