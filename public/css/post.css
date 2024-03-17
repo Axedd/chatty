@@ -145,3 +145,26 @@
 .new-comment-form textarea::placeholder {
   color: #bbb; /* Lighter text color for placeholders */
 }
+
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.post-header button {
+  background-color: #ff4d4d; /* A vibrant red background for the delete action */
+  color: white; /* White text color for contrast */
+  border: none; /* Removes the default border */
+  padding: 4px 8px; /* Top and bottom padding of 5px, left and right padding of 10px */
+  border-radius: 50%; /* Circular shape */
+  cursor: pointer; /* Changes the cursor to a pointer on hover */
+  font-weight: bold; /* Makes the "X" bold */
+  font-size: 14px; /* Font size of the "X" */
+  transition: background-color 0.3s; /* Smooth transition for the background color on hover */
+}
+
+.post-header button:hover {
+  background-color: #ff1a1a; /* Darker shade of red on hover for feedback */
+} 

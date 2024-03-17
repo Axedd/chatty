@@ -20,6 +20,7 @@ router.get('/', async function(req, res, next) {
     
     if (req.session.user) {
       res.render('index', { title: 'Home', 
+      user: req.session.user,
       posts: postResults, 
       authorList: authorList, 
       comments: commentResults
@@ -74,6 +75,18 @@ router.post('/comment', async (req, res) => {
     res.status(500).send("An error occurred while creating the post.");
   }
 });
+
+router.post('/delete', async (req, res) => {
+
+  try {
+    const post_id = req.body.post_id;
+    await postModel.deletePost(post_id)
+    res.redirect('/')
+  } catch(e) {
+    console.log(e)
+    res.redirect('/')
+  }
+})
 
 
 module.exports = router;

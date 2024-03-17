@@ -17,7 +17,15 @@ const Post = {
         return db.query('SELECT * FROM comments', callback)
     },
     getAllUserPosts: function(user_id, callback) {
-        return db.query(`SELECT * FROM posts WHERE user_id = ?`, [user_id], callback);
+        return db.query(`SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC`, [user_id], callback);
+    },
+    deletePost: async function(post_id, callback) {
+        try {
+            await db.query(`DELETE FROM comments WHERE post_id = ?`, [post_id], callback)
+            await db.query(`DELETE FROM posts WHERE id = ?`, [post_id], callback)
+        } catch(e) {
+            await db.query(`DELETE FROM posts WHERE id = ?`, [post_id], callback)
+        }
     }
 }
 
