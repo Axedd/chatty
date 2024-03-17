@@ -19,9 +19,18 @@ router.get('/', async function(req, res, next) {
     const [commentResults, commentFields] = await postModel.getAllComments()
     
     if (req.session.user) {
-      res.render('index', { title: 'Home', posts: postResults, authorList: authorList, comments: commentResults});
+      res.render('index', { title: 'Home', 
+      posts: postResults, 
+      authorList: authorList, 
+      comments: commentResults
+    });
     } else {
-      res.render('index', { title: 'Home', posts: postResults, authorList: authorList, comments: commentResults});
+      res.render('index', { 
+        title: 'Home', 
+        posts: postResults, 
+        authorList: authorList, 
+        comments: commentResults
+      });
     }
   } catch (error) {
     console.error('Failed to fetch posts: ', error);

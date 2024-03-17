@@ -47,10 +47,6 @@ io.on('connection', (socket) => {
     console.log('a user connected');
     const someSocketId = socket.id; // For demonstration, using the current socket's ID
 
-    socket.on('add username', (username) => {
-        console.log(username)
-        socket.username = username; // Store the username in the socket object for later use
-    });
 
     // Emitting an event specifically to this socket ID
     io.to(someSocketId).emit('showAlert', 'This is a message for you!');
@@ -71,6 +67,4 @@ io.on('connection', (socket) => {
 
 server.listen(3000, () => {
     console.log('listening on *:3000');
-
-    
 })

@@ -15,6 +15,9 @@ const Post = {
     },
     getAllComments: function(callback) {
         return db.query('SELECT * FROM comments', callback)
+    },
+    getAllUserPosts: function(user_id, callback) {
+        return db.query(`SELECT * FROM posts WHERE user_id = ?`, [user_id], callback);
     }
 }
 

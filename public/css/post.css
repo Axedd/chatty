@@ -39,10 +39,11 @@
   }
   
   .post {
-    background-color: #fff;
-    border-bottom: 1px solid #eee;
+    background-color: #ffffff;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     padding: 20px;
-    margin-bottom: 10px;
   }
   
   .post:last-child {
@@ -65,8 +66,10 @@
   }
   
   .post-footer {
-    color: #666;
-    font-size: 0.8em;
+    font-size: 0.85em;
+    color: #777;
+    padding-top: 15px;
+    border-top: 1px solid #eee; /* Adds a neat separator */
   }
   
   /* Adjustments for different screens */
@@ -106,3 +109,39 @@
   .comment:hover {
     background-color: #e2e6ea; /* Lighter shade for hover effect */
   }
+
+  /* Comment Submission Form */
+.new-comment-form {
+  margin-top: 20px; /* Provides spacing from the post or previous content */
+}
+
+.new-comment-form textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 16px; /* Ensures spacing between the textarea and the button */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Ensures padding doesn't affect the overall width */
+  resize: vertical; /* Allows the user to resize the textarea vertically */
+  min-height: 100px; /* Gives enough space for typing a comment */
+}
+
+.new-comment-form button {
+  padding: 10px 20px;
+  background-color: #5cb85c; /* Aligns with the submit button color scheme */
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s; /* Smooth transition for hover effect */
+}
+
+.new-comment-form button:hover {
+  background-color: #4cae4c; /* Slightly darker shade for the hover state */
+}
+
+/* Placeholder styling for consistency */
+.new-comment-form textarea::placeholder {
+  color: #bbb; /* Lighter text color for placeholders */
+}

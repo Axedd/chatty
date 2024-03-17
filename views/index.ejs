@@ -37,15 +37,16 @@
               <div class="post-footer">
                 <span>Posted on <%= post.created_at.toISOString().slice(0, 10) %></span>
               </div>
-              -------------------------------------------------------
               <% if (user) { %>
-                <form id="new-comment-form" action="/comment" method="POST">
+                <!-- Include a Comment Button -->
+                <button type="button" class="comment-button" data-target="comment-form-<%= post.id %>">Comment</button>
+                
+                <!-- Adjust the form to have a unique ID and be initially hidden -->
+                <form id="comment-form-<%= post.id %>" class="new-comment-form" action="/comment" method="POST" style="display: none;">
                   <input type="hidden" name="post_id" value="<%= post.id %>">
-                  <textarea name="content" placeholder="Commnet" required></textarea>
+                  <textarea name="content" placeholder="Comment" required></textarea>
                   <button type="submit">Post</button>
                 </form>
-              <% } else { %>
-
               <% } %>
               <div class="post-comments">
                 <% if(comments && comments.length > 0){ %>
@@ -81,4 +82,15 @@
 </body>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/app.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+    document.querySelectorAll('.comment-button').forEach(button => {
+      button.addEventListener('click', function() {
+        const targetId = this.getAttribute('data-target');
+        const form = document.getElementById(targetId);
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+      });
+    });
+  });
+</script>
 </html>

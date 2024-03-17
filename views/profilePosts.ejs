@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/post.css">
+    <title>Posts</title>
+</head>
+<body>
+    <%- include('static/header') %>
+
+    <section id="posts-section">
+        <% if(posts.length > 0) { %>
+          <% posts.forEach(function(post) { %>
+            <article class="post">
+              <a>@<%- username %></a>
+              <div class="post-content"><%= post.content %></div>
+              <% if(post.image_url){ %>
+                <div class="post-image">
+                  <img src="<%= post.image_url %>" alt="Post Image">
+                </div>
+              <% } %>
+              <div class="post-footer">
+                <span>Posted on <%= post.created_at.toISOString().slice(0, 10) %></span>
+              </div>
+              <div class="post-comments">
+                <% if(comments && comments.length > 0){ %>
+                  <% comments.forEach(function(comment) { %>
+                    <% if (comment.post_id === post.id) { %>
+                      <div class="comment">
+                        <a>@<%= authorList[comment.user_id] %></a>
+                        <div class="comment-content"><%= comment.content %></div>
+                        <div class="comment-footer">
+                          <span>Commented on <%= comment.created_at.toISOString().slice(0, 10) %></span>
+                        </div>
+                      </div>
+                      <% } %>
+                  <% }); %>
+                <% } else { %>
+                  <p>No comments to show.</p>
+                <% } %>
+              </div>
+            </article>
+          <% }); %>
+        <% } else { %>
+          <p>No posts to show.</p>
+        <% } %>
+      </section>
+        
+    </section>
+</body>
+</html>
