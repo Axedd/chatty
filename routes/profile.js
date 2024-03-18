@@ -9,9 +9,10 @@ router.get('/', async function(req, res, next) {
 
     if (user_id) {
       const username = req.session.user.username;
+      const role = req.session.user.role;
 
       const [postResults, fields] = await postModel.getAllUserPosts([user_id]);
-      res.render('profile', { title: 'Profile', username: username, posts: postResults});
+      res.render('profile', { title: 'Profile', username: username, posts: postResults, role: role});
     } else {
       res.redirect('/login');
     }

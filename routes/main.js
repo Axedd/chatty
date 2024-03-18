@@ -77,11 +77,17 @@ router.post('/comment', async (req, res) => {
 });
 
 router.post('/delete', async (req, res) => {
-
+  const user_id = req.session.user.userID;
+  const user_role = req.session.user.role;
   try {
-    const post_id = req.body.post_id;
-    await postModel.deletePost(post_id)
-    res.redirect('/')
+    const post_id = req.body.post_id
+    const [postResults, fields] = await postModel.getAllPosts()
+    let post = postResults.find(post => post.id == post_id)
+
+    if (post && (post.user_id == user_id || user_role == "OWNER")) {
+      await postModel.deletePost(post_id)
+      res.redirect('/')
+    }
   } catch(e) {
     console.log(e)
     res.redirect('/')

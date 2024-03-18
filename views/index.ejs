@@ -30,7 +30,7 @@
               <div class="post-header">
                 <a>@<%= authorList[post.user_id] %></a>
                 <% if (user) { %>
-                  <% if (user.userID == post.user_id) { %>
+                  <% if (user.userID == post.user_id || user.role === 'ADMIN' || user.role === 'OWNER') { %>
                     <form action="/delete" method="POST">
                       <button name="post_id" value="<%= post.id%>">X</button>
                     </form>

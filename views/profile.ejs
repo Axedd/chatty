@@ -17,7 +17,13 @@
             </div>
             <div id="profile-details">
                 <h1><%- username %></h1>
-                <p>God</p>
+                <% if (role === 'ADMIN') { %>
+                    <p style="color: rgb(245, 64, 94); font-weight: bold;">Admin</p>
+                <% } else if (role == 'OWNER') { %>
+                    <p style="color:gold; font-weight: bold;">Owner</p>
+                <% } else { %>
+                    <p style="color:black; font-weight: bold;">User</p>
+                <% } %>
             </div>
             <div id="profile-actions">
                 <button>Edit Profile</button>
