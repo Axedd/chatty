@@ -26,6 +26,13 @@ const Post = {
         } catch(e) {
             await db.query(`DELETE FROM posts WHERE id = ?`, [post_id], callback)
         }
+    },
+    deleteComment: async function(comment_id, callback) {
+        try {
+            await db.query(`DELETE FROM comments WHERE id = ?`, [comment_id], callback)
+        } catch(e) {
+            console.log(e)
+        }
     }
 }
 

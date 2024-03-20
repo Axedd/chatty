@@ -6,6 +6,7 @@ const { Server } = require('socket.io');
 const io = new Server(server);
 const session = require('express-session');
 require('dotenv').config();
+const flash = require('connect-flash');
 
 
 app.use(express.json());
@@ -14,12 +15,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
 
-app.use(session({
+const sessionMiddleware = session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: { secure: 'auto' }
-}));
+});
+
+app.use(sessionMiddleware)
+
+app.use(flash());
 
 app.use((req, res, next) => {
     res.locals.user = req.session.user || null;
@@ -43,6 +48,10 @@ app.get('/logout', (req, res) => {
     });
 });
 
+io.use((socket, next) => {
+    sessionMiddleware(socket.request, {}, next);
+});
+
 io.on('connection', (socket) => {
     console.log('a user connected');
     const someSocketId = socket.id; // For demonstration, using the current socket's ID
@@ -53,16 +62,27 @@ io.on('connection', (socket) => {
     
     
     socket.on('chat message', (msg) => {
-        const message = socket.username + ': ' + msg;
-        io.emit('chat message', message);
-    });
+        if (socket.request.session.user && socket.request.session.user.username) {
+            const username = socket.request.session.user.username;
+            const role = socket.request.session.user.role;
+            const message = `${username[0].toUpperCase() + username.slice(1)}: ${msg}`;
+            io.emit('chat message', {'msg': message, 'role': role});
+        } else {
+            // Handle cases where the user or username is not set
+            console.log('User session or username not found.');
+        }
+      });
 
-    
+    /*
     socket.on('disconnect', () => {
         io.emit('chat message', '*User Left The Chat*');
       });
+    */
     
 })
+
+
+
 
 
 server.listen(3000, () => {

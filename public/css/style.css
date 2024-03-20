@@ -4,7 +4,8 @@ html, body {
   padding: 0;
   width: 100%;
   height: 100%;
-  background-color: #e2e2e2;
+  overflow: auto;
+  background-color: rgb(187, 187, 187);
 }
 
 #form {
@@ -135,4 +136,46 @@ html, body {
   nav ul li a:hover {
     text-decoration: underline;
   }
+
   
+  canvas {
+    display: block;
+    background-color: #000;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+.alert {
+  padding: 15px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,.1);
+  transition: all 0.3s ease-in-out;
+  position: fixed; /* or 'absolute' if the alert is within a positioned parent */
+  left: 50%; /* Move the left edge to the center of the container */
+  transform: translateX(-50%); /* Shift it back by half its own width */
+}
+
+.alert-success {
+  color: #3c763d; /* Dark green text for high contrast */
+  background-color: #dff0d8; /* Light green background */
+  border-color: #d6e9c6; /* Slightly darker green border */
+}
+
+.alert > .close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
+  padding: 0.75rem 1.25rem;
+  color: inherit;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
+
+.alert > .close:hover {
+  color: #000;
+}

@@ -1,6 +1,6 @@
 <header>
     <% if (user) { %>
-        <h1>Hello <%= user.username %></h1>
+        <h1>Hello <%= user.username[0].toUpperCase() + user.username.slice(1) %></h1>
     <% } else { %>
         <h1>Hello Guest</h1>
     <% } %>

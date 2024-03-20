@@ -11,6 +11,13 @@
 <body>
     <%- include('static/header') %>
 
+    <% if (message.length > 0) { %>
+      <div class="alert alert-success">
+        <button type="button" class="close" onclick="this.parentElement.style.display='none';">&times;</button>
+        <%= message %>
+      </div>
+    <% } %>
+
     <section id="new-post-section">
         <% if (user) { %>
             <form id="new-post-form" action="/post" method="POST">
@@ -62,7 +69,16 @@
                   <% comments.forEach(function(comment) { %>
                     <% if (comment.post_id === post.id) { %>
                       <div class="comment">
-                        <a>@<%= authorList[comment.user_id] %></a>
+                        <div class="comment-header">
+                          <a>@<%= authorList[comment.user_id] %></a>
+                          <% if (user) { %>
+                            <% if (user.userID == comment.user_id || user.role === 'ADMIN' || user.role === 'OWNER') { %>
+                              <form action="/deleteComment" method="POST">
+                                <button name="comment_id" value="<%= comment.id%>">X</button>
+                              </form>
+                            <% } %>
+                          <% } %>
+                        </div>
                         <div class="comment-content"><%= comment.content %></div>
                         <div class="comment-footer">
                           <span>Commented on <%= comment.created_at.toISOString().slice(0, 10) %></span>
@@ -86,11 +102,13 @@
     <ul id="messages"></ul>
 
     <form id="form" action="">
-        <input id="input" autocomplete="off" /><button>Send</button>
+        <input id="input" autocomplete="off" />
+        <button id="sendBTN">Send</button>
     </form>
 </body>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/app.js"></script>
+<script src="/js/header.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', (event) => {
     document.querySelectorAll('.comment-button').forEach(button => {

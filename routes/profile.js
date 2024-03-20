@@ -24,8 +24,6 @@ router.get('/', async function(req, res, next) {
 
 router.get('/posts', async function(req, res, next) {
 
-
-
   try {
     const user_id = req.session.user.userID;
     const username = req.session.user.username;

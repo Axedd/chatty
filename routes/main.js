@@ -6,6 +6,8 @@ const postModel = require('../models/postModel')
 
 router.get('/', async function(req, res, next) {
 
+  const messages = req.flash('success');
+
   const [results, fields] = await postModel.getPostAuthor()
   authorList = {}
 
@@ -23,14 +25,16 @@ router.get('/', async function(req, res, next) {
       user: req.session.user,
       posts: postResults, 
       authorList: authorList, 
-      comments: commentResults
+      comments: commentResults,
+      message: messages.length > 0 ? messages[0] : ''
     });
     } else {
       res.render('index', { 
         title: 'Home', 
         posts: postResults, 
         authorList: authorList, 
-        comments: commentResults
+        comments: commentResults,
+        message: messages.length > 0 ? messages[0] : ''
       });
     }
   } catch (error) {
@@ -79,6 +83,7 @@ router.post('/comment', async (req, res) => {
 router.post('/delete', async (req, res) => {
   const user_id = req.session.user.userID;
   const user_role = req.session.user.role;
+
   try {
     const post_id = req.body.post_id
     const [postResults, fields] = await postModel.getAllPosts()
@@ -93,6 +98,28 @@ router.post('/delete', async (req, res) => {
     res.redirect('/')
   }
 })
+
+router.post('/deleteComment', async (req, res) => {
+  const user_id = req.session.user.userID;
+  const user_role = req.session.user.role;
+  
+  try {
+    const comment_id = req.body.comment_id
+    const [commentResults, fields] = await postModel.getAllComments()
+    let comment = commentResults.find(comment => comment.id == comment_id)
+
+    if (comment && (comment.user_id == user_id || user_role == "OWNER")) {
+      await postModel.deleteComment(comment_id)
+      res.redirect('/')
+    } else {
+      res.redirect('/')
+    }
+  } catch(e) {
+    console.log(e)
+    res.redirect('/')
+  }
+})
+
 
 
 module.exports = router;

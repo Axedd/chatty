@@ -20,7 +20,7 @@ router.post('/', async function(req, res) {
 
         const match = await bcrypt.compare(password, user.password_hash);
         if (match) {
-
+          req.flash('success', 'Login Successfull!');
           req.session.user = { userID: user.user_id, username: username, role: user.role };
           console.log(req.session.user)
           return res.redirect('/');
