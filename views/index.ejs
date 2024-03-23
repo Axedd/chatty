@@ -35,7 +35,7 @@
           <% posts.forEach(function(post) { %>
             <article class="post">
               <div class="post-header">
-                <a>@<%= authorList[post.user_id] %></a>
+                <a href="/profile/<%= authorList[post.user_id] %>">@<%= authorList[post.user_id] %></a>
                 <% if (user) { %>
                   <% if (user.userID == post.user_id || user.role === 'ADMIN' || user.role === 'OWNER') { %>
                     <form action="/delete" method="POST">
@@ -70,7 +70,11 @@
                     <% if (comment.post_id === post.id) { %>
                       <div class="comment">
                         <div class="comment-header">
-                          <a>@<%= authorList[comment.user_id] %></a>
+                          <% if (comment.user_id == 7) { %>
+                            <a href="/profile/<%= authorList[comment.user_id] %>" style="color: gold">@<%= authorList[comment.user_id] %></a>
+                          <% } else { %>
+                            <a href="/profile/<%= authorList[comment.user_id] %>">@<%= authorList[comment.user_id] %></a>
+                          <% } %>
                           <% if (user) { %>
                             <% if (user.userID == comment.user_id || user.role === 'ADMIN' || user.role === 'OWNER') { %>
                               <form action="/deleteComment" method="POST">

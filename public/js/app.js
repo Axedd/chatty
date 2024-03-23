@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       setTimeout(function() {
         alert.style.opacity = "0";
         setTimeout(function(){ 
+          alert.remove()
           alert.style.display = "none"; 
         }, 600); // This matches the CSS opacity transition time
       }, 5000); // Change 5000 to the number of milliseconds you want

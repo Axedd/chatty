@@ -29,7 +29,7 @@
                   <% comments.forEach(function(comment) { %>
                     <% if (comment.post_id === post.id) { %>
                       <div class="comment">
-                        <a>@<%= authorList[comment.user_id] %></a>
+                        <a>@<%= authorListID[comment.user_id][0] %></a>
                         <div class="comment-content"><%= comment.content %></div>
                         <div class="comment-footer">
                           <span>Commented on <%= comment.created_at.toISOString().slice(0, 10) %></span>

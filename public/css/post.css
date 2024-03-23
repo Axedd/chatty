@@ -37,6 +37,9 @@
   #posts-section {
     padding: 0 20px;
   }
+  .post-header a {
+    color: blue;
+  }
   
   .post {
     background-color: #ffffff;

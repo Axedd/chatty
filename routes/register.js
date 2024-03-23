@@ -29,7 +29,7 @@ router.post('/', async function(req, res) {
     try {
         const passwordHash = await hashPassword(password);
 
-        const [result] = await db.execute(query, [username, passwordHash, email]);
+        const [result] = await db.execute(query, [username.toLowerCase(), passwordHash, email]);
         return res.redirect('/login');
     } catch (error) {
         console.error('Error inserting new user:', error);
