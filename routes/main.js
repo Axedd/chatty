@@ -4,7 +4,7 @@ const db = require('../models/db');
 const postModel = require('../models/postModel')
 
 
-router.get('/', async function(req, res, next) {
+router.get('/', async function (req, res, next) {
 
   const messages = req.flash('success');
 
@@ -15,24 +15,28 @@ router.get('/', async function(req, res, next) {
   for (i = 0; i < results.length; i++) {
     authorList[results[i].user_id] = results[i].username
   }
-  
+
   try {
     const [postResults, fields] = await postModel.getAllPosts()
     const [commentResults, commentFields] = await postModel.getAllComments()
-    
+    console.log(postResults)
+
     if (req.session.user) {
-      res.render('index', { title: 'Home', 
-      user: req.session.user,
-      posts: postResults, 
-      authorList: authorList, 
-      comments: commentResults,
-      message: messages.length > 0 ? messages[0] : ''
-    });
+      const [user_likes] = await postModel.getUserLikedPosts(req.session.user.userID)
+      res.render('index', {
+        title: 'Home',
+        user: req.session.user,
+        posts: postResults,
+        authorList: authorList,
+        comments: commentResults,
+        user_likes: user_likes,
+        message: messages.length > 0 ? messages[0] : ''
+      });
     } else {
-      res.render('index', { 
-        title: 'Home', 
-        posts: postResults, 
-        authorList: authorList, 
+      res.render('index', {
+        title: 'Home',
+        posts: postResults,
+        authorList: authorList,
         comments: commentResults,
         message: messages.length > 0 ? messages[0] : ''
       });
@@ -55,7 +59,7 @@ router.post('/post', async (req, res) => {
 
   try {
     await postModel.createPost([user_id, content, image_url || null])
-    res.redirect('/'); 
+    res.redirect('/');
   } catch (error) {
     console.error(error);
     res.status(500).send("An error occurred while creating the post.");
@@ -73,12 +77,37 @@ router.post('/comment', async (req, res) => {
 
   try {
     await postModel.createComment([user_id, post_id, content])
-    res.redirect('/'); 
+    res.redirect('/');
   } catch (error) {
     console.error(error);
     res.status(500).send("An error occurred while creating the post.");
   }
 });
+
+router.post('/like/:postID', async (req, res) => {
+  const postID = req.params.postID;
+  const user = req.session.user;
+
+  try {
+    if (user) {
+      const userID = req.session.user.userID;
+      const [postResults, fields] = await postModel.getAllPosts();
+      for (const post of postResults) {
+        if (post['id'] == postID) {
+          const amountOfLikes = await postModel.likePost(userID, postID);
+          res.json({ likes: amountOfLikes });
+          return;
+        }
+      }
+      
+    } else {
+      res.json({ redirectTo: '/login' });
+    }
+  } catch (e) {
+    console.error('Error liking post:', e);
+    res.status(500).send('An error occurred');
+  }
+})
 
 router.post('/delete', async (req, res) => {
   const user_id = req.session.user.userID;
@@ -89,11 +118,12 @@ router.post('/delete', async (req, res) => {
     const [postResults, fields] = await postModel.getAllPosts()
     let post = postResults.find(post => post.id == post_id)
 
+
     if (post && (post.user_id == user_id || user_role == "OWNER")) {
       await postModel.deletePost(post_id)
       res.redirect('/')
     }
-  } catch(e) {
+  } catch (e) {
     console.log(e)
     res.redirect('/')
   }
@@ -102,7 +132,7 @@ router.post('/delete', async (req, res) => {
 router.post('/deleteComment', async (req, res) => {
   const user_id = req.session.user.userID;
   const user_role = req.session.user.role;
-  
+
   try {
     const comment_id = req.body.comment_id
     const [commentResults, fields] = await postModel.getAllComments()
@@ -114,7 +144,7 @@ router.post('/deleteComment', async (req, res) => {
     } else {
       res.redirect('/')
     }
-  } catch(e) {
+  } catch (e) {
     console.log(e)
     res.redirect('/')
   }

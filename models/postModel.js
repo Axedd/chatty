@@ -33,6 +33,29 @@ const Post = {
         } catch(e) {
             console.log(e)
         }
+    },
+    likePost: async (userID, postID, callback) => {
+        try {
+            await db.query(`INSERT INTO user_likes (user_id, post_id) VALUES (?, ?)`, [userID, postID], callback)
+            await db.query(`UPDATE posts SET likes = likes + 1 WHERE id = ?`, [postID], callback);
+            const [likesResult] = await db.query(`SELECT likes FROM posts WHERE id = ?`, [postID], callback);
+            return likesResult[0].likes;
+        } catch(e) {
+            if (e.code === 'ER_DUP_ENTRY') {
+                console.log('User has already liked this post.');
+            } else {
+                console.error(e);
+                throw e; 
+            }
+        }
+    },
+    getUserLikedPosts: async (userID, callback) => {
+        try {
+            const likedPosts = await db.query(`SELECT * FROM user_likes WHERE user_id = ?`, [userID], callback);
+            return likedPosts;
+        } catch(e) {
+            console.log(e)
+        }
     }
 }
 

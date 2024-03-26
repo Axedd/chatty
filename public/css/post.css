@@ -53,9 +53,12 @@
     border-bottom: 0;
   }
   
-  .post-content {
+  .post-content pre{
     margin-top: 5px;
     margin-bottom: 10px;
+    font-size: 15px;
+    white-space: pre-wrap;
+    font-family: 'Roboto', Arial;
   }
   
   .post-image {
@@ -69,10 +72,47 @@
   }
   
   .post-footer {
-    font-size: 0.85em;
-    color: #777;
-    padding-top: 15px;
-    border-top: 1px solid #eee; /* Adds a neat separator */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #ddd; /* Light grey border at the top */
+  }
+
+  .post-footer > span { /* Direct child span element styling */
+    font-size: 0.8em; /* Smaller font size */
+    color: #666; /* Lighter text color for subtlety */
+    font-weight: normal; /* Ensuring it's not bold */
+  }
+  .likeSection {
+    padding: 10px;
+  }
+  .likeSection span {
+    padding-right: 5px
+  }
+
+  .post-footer button {
+    padding: 5px 10px;
+    color: white; /* White text */
+    border: none;
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Change mouse cursor to indicate it's clickable */
+    transition: background-color 0.3s ease; /* Smooth background color change on hover */
+  }
+
+  .liked-button {
+    background-color: #c7c7c7;
+  }
+
+  .like-button {
+    background-color: #007bff;
+  }
+
+  .liked-button:hover {
+    background-color: #b30000; /* Darker shade of blue when hovered */
+  }
+  
+  .like-button:hover {
+    background-color: #0056b3; /* Darker shade of blue when hovered */
   }
   
   /* Adjustments for different screens */
@@ -99,8 +139,11 @@
     font-weight: bold; /* Makes the author name stand out */
   }
   
-  .comment-content {
+  .comment-content pre {
     margin-top: 10px; /* Spacing for readability */
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: 'Times New Roman', Times, serif;
   }
   
   .comment-footer {

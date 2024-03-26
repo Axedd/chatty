@@ -44,7 +44,7 @@
                   <% } %>
                 <% } %>
               </div>
-              <div class="post-content"><%= post.content %></div>
+              <div class="post-content"><pre><%= post.content %></pre></div>
               <% if(post.image_url){ %>
                 <div class="post-image">
                   <img src="<%= post.image_url %>" alt="Post Image">
@@ -52,6 +52,32 @@
               <% } %>
               <div class="post-footer">
                 <span>Posted on <%= post.created_at.toISOString().slice(0, 10) %></span>
+                <div class="likeSection">
+                  <% if (user) { %>
+                    <% let likedByUser = false; %>
+                    <% user_likes.forEach(function(like) { %>
+                      <% if (post.id == like.post_id) { %>
+                        <% likedByUser = true; %>
+                        <form action="/like/<%= post.id %>" method="POST">
+                          <span><%= post.likes %> Likes</span>
+                          <button class="liked-button" type="submit">Like</button>
+                        </form>
+                      <% }; %>
+                    <% }); %>
+                    <% if (!likedByUser) { %>
+                      <form action="/like/<%= post.id %>" method="POST">
+                        <span><%= post.likes %> Likes</span>
+                        <button class="like-button" type="submit">Like</button>
+                      </form>
+                    <% } %>
+                  <% } else { %>
+                    <form action="/like/<%= post.id %>" method="POST">
+                      <span><%= post.likes %> Likes</span>
+                      <button class="like-button" type="submit">Like</button>
+                    </form>
+                  <% } %>
+                </div>
+              </div>
               </div>
               <% if (user) { %>
                 <!-- Include a Comment Button -->
@@ -83,7 +109,7 @@
                             <% } %>
                           <% } %>
                         </div>
-                        <div class="comment-content"><%= comment.content %></div>
+                        <div class="comment-content"><pre><%= comment.content %></pre></div>
                         <div class="comment-footer">
                           <span>Commented on <%= comment.created_at.toISOString().slice(0, 10) %></span>
                         </div>

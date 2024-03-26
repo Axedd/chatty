@@ -65,8 +65,9 @@ io.on('connection', (socket) => {
         if (socket.request.session.user && socket.request.session.user.username) {
             const username = socket.request.session.user.username;
             const role = socket.request.session.user.role;
-            const message = `${username[0].toUpperCase() + username.slice(1)}: ${msg}`;
-            io.emit('chat message', {'msg': message, 'role': role});
+            const message = msg;
+            const userDisplay = username[0].toUpperCase() + username.slice(1);
+            io.emit('chat message', {'user': userDisplay, msg: message, 'role': role});
         } else {
             // Handle cases where the user or username is not set
             console.log('User session or username not found.');
