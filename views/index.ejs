@@ -129,18 +129,65 @@
         
     </section>
 
-    <ul id="messages"></ul>
+    <div id="chat-icon" onclick="toggleChat()">
+      <span>Chat</span> <!-- Replace with an actual icon if you prefer -->
+  </div>
 
-    <form id="form" action="">
-        <input id="input" autocomplete="off" />
-        <button id="sendBTN">Send</button>
-    </form>
+    <div id="chat-container">
+  <div id="chat-header">
+    <span>Chat</span>
+    <button id="close-chat">Close</button>
+  </div>
+  <ul id="messages">
+    <!-- Chat messages go here -->
+  </ul>
+  <form id="form">
+    <input id="input" autocomplete="off" />
+    <button id="sendBTN">Send</button>
+  </form>
+</div>
 </body>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/app.js"></script>
 <script src="/js/header.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', (event) => {
+    var closeButton = document.getElementById('close-chat');
+    closeButton.addEventListener('click', function(event) {
+        closeChat(event);
+    });
+    
+    // Toggle chat button listener (optional, if not handled inline in the HTML)
+    var chatHeader = document.getElementById('chat-header');
+    chatHeader.addEventListener('click', function(event) {
+        // Prevent the close button's event from bubbling up to here
+        if (event.target !== closeButton) {
+            toggleChat();
+        }
+    });
+
+    // Function to close the chat
+function closeChat(event) {
+  // Stop the event from propagating up to the chat-header
+  event.stopPropagation();
+  
+  // Close the chat by setting max-height to 0
+  var chatContainer = document.getElementById('chat-container');
+  chatContainer.style.maxHeight = '0';
+}
+
+// Function to toggle the chat open and closed
+function toggleChat() {
+  var chatContainer = document.getElementById('chat-container');
+  if (chatContainer.style.maxHeight !== '0px') {
+      chatContainer.style.maxHeight = '0px';
+  } else {
+      chatContainer.style.maxHeight = '70%';
+  }
+}
+    
+    // Initialize chat as open or closed
+    document.getElementById('chat-container').style.display = 'block'; // or 'none' to start closed
     document.querySelectorAll('.comment-button').forEach(button => {
       button.addEventListener('click', function() {
         const targetId = this.getAttribute('data-target');
@@ -149,5 +196,6 @@
       });
     });
   });
+
 </script>
 </html>

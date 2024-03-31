@@ -23,6 +23,7 @@ router.post('/', async function(req, res) {
           req.flash('success', 'Login Successfull!');
           req.session.user = { userID: user.user_id, username: username, role: user.role };
           console.log(req.session.user)
+          res.cookie('loggedIn', 'true', { httpOnly: false, secure: true });
           return res.redirect('/');
         } else {
           return res.status(401).send('Username or password is incorrect');

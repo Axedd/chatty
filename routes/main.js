@@ -19,7 +19,6 @@ router.get('/', async function (req, res, next) {
   try {
     const [postResults, fields] = await postModel.getAllPosts()
     const [commentResults, commentFields] = await postModel.getAllComments()
-    console.log(postResults)
 
     if (req.session.user) {
       const [user_likes] = await postModel.getUserLikedPosts(req.session.user.userID)
@@ -94,8 +93,9 @@ router.post('/like/:postID', async (req, res) => {
       const [postResults, fields] = await postModel.getAllPosts();
       for (const post of postResults) {
         if (post['id'] == postID) {
-          const amountOfLikes = await postModel.likePost(userID, postID);
-          res.json({ likes: amountOfLikes });
+          const amountOfLikes = await postModel.togglePostLike(userID, postID);
+          console.log(amountOfLikes)
+          res.json({ likes: amountOfLikes.likeCount, state: amountOfLikes.state});
           return;
         }
       }
@@ -117,7 +117,7 @@ router.post('/delete', async (req, res) => {
     const post_id = req.body.post_id
     const [postResults, fields] = await postModel.getAllPosts()
     let post = postResults.find(post => post.id == post_id)
-
+    console.log(post)
 
     if (post && (post.user_id == user_id || user_role == "OWNER")) {
       await postModel.deletePost(post_id)

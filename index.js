@@ -7,6 +7,7 @@ const io = new Server(server);
 const session = require('express-session');
 require('dotenv').config();
 const flash = require('connect-flash');
+const cookieParser = require('cookie-parser');
 
 
 app.use(express.json());
@@ -25,11 +26,22 @@ const sessionMiddleware = session({
 app.use(sessionMiddleware)
 
 app.use(flash());
+app.use(cookieParser());
 
 app.use((req, res, next) => {
     res.locals.user = req.session.user || null;
     next();
 });
+
+app.use((req, res, next) => {
+    console.log("Middleware check for loggedIn cookie");
+    if (req.cookies.loggedIn && !req.session.user) {
+        console.log("Clearing loggedIn cookie");
+        res.clearCookie('loggedIn');
+    }
+    next();
+});
+
 
 // Declare the route handlers.
 const mainRouter = require('./routes/main');
@@ -42,8 +54,10 @@ app.use('/profile', profileRouter);
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 
+
 app.get('/logout', (req, res) => {
     req.session.destroy(() => {
+        res.clearCookie('loggedIn');
         res.redirect('/');
     });
 });

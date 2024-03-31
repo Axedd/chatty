@@ -15,7 +15,7 @@
           <% posts.forEach(function(post) { %>
             <article class="post">
               <a>@<%- username %></a>
-              <div class="post-content"><%= post.content %></div>
+              <div class="post-content"><pre><%= post.content %></pre></div>
               <% if(post.image_url){ %>
                 <div class="post-image">
                   <img src="<%= post.image_url %>" alt="Post Image">
@@ -23,6 +23,31 @@
               <% } %>
               <div class="post-footer">
                 <span>Posted on <%= post.created_at.toISOString().slice(0, 10) %></span>
+                <div class="likeSection">
+                  <% if (user) { %>
+                    <% let likedByUser = false; %>
+                    <% user_likes.forEach(function(like) { %>
+                      <% if (post.id == like.post_id) { %>
+                        <% likedByUser = true; %>
+                        <form action="/like/<%= post.id %>" method="POST">
+                          <span><%= post.likes %> Likes</span>
+                          <button class="liked-button" type="submit">Like</button>
+                        </form>
+                      <% }; %>
+                    <% }); %>
+                    <% if (!likedByUser) { %>
+                      <form action="/like/<%= post.id %>" method="POST">
+                        <span><%= post.likes %> Likes</span>
+                        <button class="like-button" type="submit">Like</button>
+                      </form>
+                    <% } %>
+                  <% } else { %>
+                    <form action="/like/<%= post.id %>" method="POST">
+                      <span><%= post.likes %> Likes</span>
+                      <button class="like-button" type="submit">Like</button>
+                    </form>
+                  <% } %>
+                </div>
               </div>
               <div class="post-comments">
                 <% if(comments && comments.length > 0){ %>
@@ -50,4 +75,6 @@
         
     </section>
 </body>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/app.js"></script>
 </html>

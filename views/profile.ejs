@@ -26,8 +26,13 @@
                 <% } %>
             </div>
             <div id="profile-actions">
+            <% if (authorizedProfile) { %>
                 <button>Edit Profile</button>
                 <button>Change Password</button>
+            <% } else { %>
+                <button>Follow</button>
+                <button>Report</button>
+            <% }; %>
             </div>
         </section>
 
